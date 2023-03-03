@@ -17,13 +17,17 @@ export class App extends Component {
   };
 
   addContact = newContact => {
-    this.checkAddedContacts(newContact.name) ? alert(`${newContact.name} is already in contacts.`) :
-      this.setState(
+    if (this.checkAddedContacts(newContact.name)) {
+  alert(`${newContact.name} is already in contacts.`)
+    } else if (this.checkAddedPhones(newContact.number)) {
+      alert(`Contact with number ${newContact.number} is already in contacts.`)
+} else {this.setState(
       prevState => {
         return {
           contacts: [...prevState.contacts, newContact]
-        };
-      });
+    };
+  });
+    }
   };
 
   deleteContact = contactId => {
@@ -39,13 +43,31 @@ export class App extends Component {
   getFiltredContacts = () => {
     const { contacts, filter } = this.state;
 
-    const normalizedFilter = filter.toLocaleLowerCase();
+    const normalizedFilter = filter.trim().toLocaleLowerCase();
     return contacts.filter(contact => contact.name.toLocaleLowerCase().includes(normalizedFilter));
   };
 
   checkAddedContacts = (newName) => {
     return this.state.contacts.find(({ name }) => name === newName);
   };
+
+  checkAddedPhones = (newPhone) => {
+    return this.state.contacts.find(({ number }) => number === newPhone);
+  };
+
+  componentDidMount() {
+    const contacts = localStorage.getItem('contacts');
+    const parsedContacts = JSON.parse(contacts);
+   
+    if(parsedContacts){
+      this.setState({ contacts: parsedContacts });}
+}
+
+  componentDidUpdate(_, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
 
   render() {
     const filtredContacts = this.getFiltredContacts();

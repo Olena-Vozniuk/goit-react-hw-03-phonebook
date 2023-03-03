@@ -1,12 +1,13 @@
 import styled from "styled-components";
 
 export const Wrapper = styled.div`
-background-color: bisque;
-height: 100vh;
+color: darkblue;
+background-color: rgba(182, 235, 222, 0.8);
 display: flex;
 flex-direction: column;
 justify-content: center;
 align-items: center;
+padding: 20px;
 `
 
 export const Notification = styled.div`
